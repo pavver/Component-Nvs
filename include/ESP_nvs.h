@@ -11,8 +11,14 @@ class ESP_nvs
 {
 public:
   ESP_nvs();
+  ESP_nvs(const char *partition_label);
+  ESP_nvs(const char *partition_label, const char *namespace_name, nvs_open_mode_t open_mode = NVS_READWRITE);
+  ~ESP_nvs();
 
-  esp_err_t begin(const char *partitionName = NVS_DEFAULT_PART_NAME);
+  esp_err_t init(const char *partition_label);
+  esp_err_t deinit();
+
+  esp_err_t open(const char *namespace_name, nvs_open_mode_t open_mode = NVS_READWRITE);
   void close();
 
   bool eraseAll();
@@ -47,10 +53,15 @@ public:
 
   bool exists(const char *key);
 
+  const esp_partition_t *_partition = NULL;
+
 private:
-  nvs_handle _nvs_handle;
-  bool commit();
+  esp_err_t _err;
+  nvs_handle_t _nvs_handle;
   SemaphoreHandle_t nvs_sync_mutex;
+
+  bool commit();
+
   esp_err_t nvs_sync_create();
   void nvs_sync_free();
   bool nvs_sync_lock();
