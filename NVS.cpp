@@ -32,7 +32,10 @@ Nvs::Nvs(const char *partition_label, const char *namespace_name, nvs_open_mode_
   _err = init(partition_label);
 
   if (_err != ESP_OK)
-    return;
+    {
+      ESP_ERROR_CHECK(_err);
+      return;
+    }
 
   _err = open(namespace_name, open_mode);
 }
