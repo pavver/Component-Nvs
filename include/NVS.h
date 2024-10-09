@@ -312,4 +312,6 @@ private:
   esp_err_t _err = ESP_OK;
   nvs_handle_t _nvs_handle;
   SemaphoreHandle_t nvs_sync_mutex;
+
+  esp_err_t check_key_and_type(const char *key, nvs_type_t type);
 };
