@@ -321,12 +321,6 @@ double Nvs::getDouble(const char *key, double defaultValue)
 
 char *Nvs::getCharArray(const char *key, const char *defaultValue)
 {
-  size_t required_size;
-  return getCharArray(key, &required_size, defaultValue);
-}
-
-char *Nvs::getCharArray(const char *key, size_t *required_size, const char *defaultValue)
-{
   if (check_key_and_type(key, NVS_TYPE_STR) == ESP_FAIL)
   {
     if (defaultValue == nullptr)
@@ -334,7 +328,9 @@ char *Nvs::getCharArray(const char *key, size_t *required_size, const char *defa
     return strdup(defaultValue);
   }
 
-  _err = nvs_get_str(_nvs_handle, key, NULL, required_size);
+  size_t required_size;
+
+  _err = nvs_get_str(_nvs_handle, key, NULL, &required_size);
   if (_err != ESP_OK)
   {
     if (defaultValue == nullptr)
@@ -342,8 +338,8 @@ char *Nvs::getCharArray(const char *key, size_t *required_size, const char *defa
     return strdup(defaultValue);
   }
 
-  char *value = (char *)malloc(*required_size);
-  nvs_get_str(_nvs_handle, key, value, required_size);
+  char *value = (char *)malloc(required_size);
+  nvs_get_str(_nvs_handle, key, value, &required_size);
   return value;
 }
 
@@ -362,7 +358,7 @@ void *Nvs::getObject(const char *key, void *defaultValue)
   return blob;
 }
 
-bool Nvs::eraseAll()
+esp_err_t Nvs::eraseAll()
 {
   _err = nvs_erase_all(_nvs_handle);
   if (_err != ESP_OK)
@@ -370,7 +366,7 @@ bool Nvs::eraseAll()
   return nvs_commit(_nvs_handle);
 }
 
-bool Nvs::erase(const char *key)
+esp_err_t Nvs::erase(const char *key)
 {
   CHECK_LEN(key);
   _err = nvs_erase_key(_nvs_handle, key);
