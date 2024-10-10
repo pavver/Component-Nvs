@@ -1,10 +1,5 @@
 #include "include/NVS.h"
-#include "esp_partition.h"
-#include "nvs.h"
-#include "nvs_flash.h"
 #include "string.h"
-#include <esp_err.h>
-#include <freertos/semphr.h>
 
 #define CHECK_LEN(key)                         \
   if (strlen(key) > NVS_KEY_NAME_MAX_SIZE - 1) \

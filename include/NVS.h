@@ -1,11 +1,6 @@
 #pragma once
 
-#include "esp_err.h"
-#include "esp_partition.h"
-#include "freertos/FreeRTOS.h"
 #include "nvs_flash.h"
-#include <freertos/semphr.h>
-#include <freertos/task.h>
 
 class Nvs
 {
